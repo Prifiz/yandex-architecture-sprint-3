@@ -1,53 +1,22 @@
 @startuml
-'!include C4_Context.puml
-'
-'Person(operator, "Operator")
-'System(sys, "MySoft")
-'System_Ext(ext, "External")
-'
-'Rel(operator, sys, "Uses")
-'Rel(ext, sys, "Calls API")
-'
-'Rel_U(sys, ext, "test")
-''Rel_D(sys, ext, "test2")
-''Rel_R(sys, ext, "test3")
-''Rel_L(sys, ext, "test4")
+!include C4_Context.puml
 
+SHOW_PERSON_OUTLINE()
 
+Person(user, "Пользователь", "владелец дома")
 
-package "Commands" {
-  class CreateOrderCommand {
-    +execute()
-  }
-  class UpdateCourierStatusCommand {
-    +execute()
-  }
-  class CompleteDeliveryCommand {
-    +execute()
-  }
-}
+System(monolith, "Smart Home Monolith")
 
-package "Queries" {
-  class GetCourierLocationQuery {
-    +execute()
-  }
-  class GetActiveOrdersQuery {
-    +execute()
-  }
-  class GetDeliveryHistoryQuery {
-    +execute()
-  }
-}
+Rel(user, monolith, "Включить/выключить отопление")
+Rel(user, monolith, "Установить температуру")
+Rel(user, monolith, "Посмотреть текущую температуру")
 
-class OrderService {
-  +handleCommand()
-  +handleQuery()
-}
+System_Ext(heatSys, "Модуль управления отоплением", "в рамках монолита видна только абстракция 'модуль управления отоплением', явного взаимодействия с датчиками не наблюдается, TemperatureSensorRepository не используется")
 
-OrderService --> CreateOrderCommand : handles
-OrderService --> UpdateCourierStatusCommand : handles
-OrderService --> CompleteDeliveryCommand : handles
-OrderService --> GetCourierLocationQuery : handles
-OrderService --> GetActiveOrdersQuery : handles
-OrderService --> GetDeliveryHistoryQuery : handles
+Rel(monolith, heatSys, "Включить/выключить отопление")
+Rel(monolith, heatSys, "Изменение целевой температуры")
+Rel(monolith, heatSys, "Запрос текущей температуры")
+
+SHOW_LEGEND()
+
 @enduml

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://smart-home-monolith-postgresql.default:5432/smart_home
-    username: your_username
-    password: your_password
+    url: jdbc:postgresql://localhost:5432/telemetry_mgr
+    username: postgres
+    password: postgres
     hikari:
       allow-pool-suspension: true
   jpa:
@@ -19,5 +19,13 @@ spring:
       mode: always
       schema-locations: classpath:init.sql
 
+  kafka:
+    consumer:
+      group-id: group_json
+      auto-offset-reset: earliest
+    # change this property if you are using your own
+    # Kafka cluster or your Docker IP is different
+    bootstrap-servers: localhost:9092
+
 server:
-  port: 8080
+  port: 8082

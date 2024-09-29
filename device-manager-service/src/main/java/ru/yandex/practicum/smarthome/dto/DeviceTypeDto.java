@@ -1,9 +1,10 @@
-package ru.yandex.practicum.smarthome.dto.device_type;
+package ru.yandex.practicum.smarthome.dto;
 
 import lombok.Data;
 
 @Data
-public class DeviceTypeRequestDto {
+public class DeviceTypeDto {
 
+    private Long id;
     private String name;
 }

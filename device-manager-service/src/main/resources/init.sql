@@ -1,12 +1,27 @@
-CREATE TABLE IF NOT EXISTS heating_systems (
+CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
-    is_on BOOLEAN NOT NULL,
-    target_temperature DOUBLE PRECISION NOT NULL,
-    current_temperature DOUBLE PRECISION NOT NULL
+    name VARCHAR NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS temperature_sensors (
+CREATE TABLE IF NOT EXISTS house (
     id BIGSERIAL PRIMARY KEY,
-    current_temperature DOUBLE PRECISION NOT NULL,
-    last_updated TIMESTAMP NOT NULL
+    address VARCHAR NOT NULL,
+    user_id BIGSERIAL NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS device_type (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS device (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    status VARCHAR NOT NULL,
+    serial VARCHAR NOT NULL,
+    device_type_id BIGSERIAL NOT NULL,
+    house_id BIGSERIAL NOT NULL,
+    FOREIGN KEY (device_type_id) REFERENCES device_type(id),
+    FOREIGN KEY (house_id) REFERENCES house(id)
 );

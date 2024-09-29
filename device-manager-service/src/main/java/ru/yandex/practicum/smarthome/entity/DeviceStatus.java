@@ -1,2 +1,5 @@
-package ru.yandex.practicum.smarthome.entity;public enum DeviceStatus {
+package ru.yandex.practicum.smarthome.entity;
+
+public enum DeviceStatus {
+    ON, OFF
 }

@@ -1,11 +1,39 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
-autonumber
+!include C4_Container.puml
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+SHOW_PERSON_OUTLINE()
+LAYOUT_TOP_DOWN()
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+Person(user, "Пользователь")
+
+System_Boundary(deviceMgmtSystem, "Система управления устройствами") {
+    Container(deviceMgr, "Сервис управления устройствами")
+    ContainerDb(deviceMgrDb, $techn="Postgres", "Хранилище данных умных устройств")
+}
+
+System_Boundary(telemetryMgmtSystem, "Система управления телеметрией") {
+    Container(telemetryMgr, "Сервис телеметрии")
+    ContainerDb(telemetryDb, $techn="Postgres", "Хранилище данных телеметрии")
+}
+
+System_Ext(device, "Устройство умного дома")
+System_Ext(gateway, "API Gateway")
+
+Rel(user, gateway, "Подключение устройства\nУправление устройством")
+Rel(gateway, deviceMgr, "Управление устройством")
+Rel(gateway, telemetryMgr, "Просмотр данных телеметрии")
+
+ContainerQueue(broker, "Брокер", $techn="Kafka")
+
+
+Rel_D(broker, device, "Управление устройством")
+Rel_U(device, broker, "Публикация сообщений телеметрии")
+Rel(deviceMgr, broker, "Публикация команд для устройства")
+Rel(deviceMgr, deviceMgrDb, "Хранение состояний устройств")
+
+Rel(telemetryMgr, broker, "Чтение сообщений телеметрии")
+
+Rel(telemetryMgr, telemetryDb, "Хранение телеметрии")
+
 @enduml

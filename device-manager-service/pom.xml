@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.yandex.practicum</groupId>
-    <artifactId>smart-home-monolith</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>device-manager-service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>smart-home-monolith</name>
+    <name>device-manager-service</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -20,7 +20,6 @@
         <java.version>17</java.version>
         <springfox-swagger.version>3.0.0</springfox-swagger.version>
         <lombok.version>1.18.34</lombok.version>
-        <testcontainers.version>1.20.1</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -63,27 +62,13 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Test dependencies -->
+
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.8.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-testcontainers</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
     <build>
         <plugins>
