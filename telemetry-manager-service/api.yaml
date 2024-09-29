@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: telemetry-manager-service-api
+  description: Сервис управления телеметрией
+  version: 0.1.0
+
+tags:
+  - name: telemetry
+    description: Операции над телеметрией устройств
+
+x-kusk:
+  upstream:
+    service:
+      name: telemetry
+      namespace: default
+      port: 8082
+paths:
+  /device/{device_id}/telemetry:
+    get:
+      tags: [ telemetry ]
+      description: Получение телеметрии за заданный период
+      operationId: getTelemetryForPeriod
+      responses:
+        '200':
+          description: Телеметрия устройства за указанный период
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryArray'
+  /device/{device_id}/telemetry/latest:
+    get:
+      tags: [ telemetry ]
+      description: Получение последних показаний телеметрии устройства
+      operationId: getLatestTelemetry
+      responses:
+        '200':
+          description: Последние данные телеметрии устройства
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telemetry'
+components:
+  schemas:
+    Telemetry:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        name:
+          type: string
+          example: "Rumpelstilzchen"
+    UserArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/Telemetry'

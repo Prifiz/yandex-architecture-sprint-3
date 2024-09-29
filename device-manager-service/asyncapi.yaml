@@ -1,0 +1,60 @@
+asyncapi: 3.0.0
+info:
+  title: Telemetry Async API
+  version: 1.0.0
+  description: "API для асинхронного обмена данными телеметрии"
+defaultContentType: application/json
+
+channels:
+  telemetry:
+    address: 'sensor_data'
+    messages:
+      telemetry:
+        $ref: '#/components/messages/telemetry'
+    description: Топик с данными, полученных от датчиков устройств.
+operations:
+  receiveTelemetry:
+    action: receive
+    channel:
+      $ref: '#/channels/telemetry'
+    summary: >-
+      Получение данных телеметрии с устройств умного дома.
+    messages:
+      - $ref: '#/channels/telemetry/messages/telemetry'
+components:
+  messages:
+    telemetry:
+      name: telemetry
+      title: Телеметрия
+      summary: >-
+        Данные телеметрии с устройств умного дома.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/telemetryDto'
+  schemas:
+    telemetryDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+          description: Идентификатор записи телеметрии
+        deviceId:
+          type: integer
+          format: int64
+          example: 123
+          description: Идентификатор устройства
+        producedAt:
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          description: Дата и время получения записи телеметрии
+        telemetryUnit:
+          type: string
+          example: "Температура"
+          description: Вид показания телеметрии
+        data:
+          type: string
+          example: "30"
+          description: Значение показания телеметрии

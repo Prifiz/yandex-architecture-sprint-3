@@ -1,0 +1,53 @@
+asyncapi: 3.0.0
+info:
+  title: Smart Devices Kafka API
+  version: 1.0.0
+  description: "API для асинхронного обмена данными телеметрии"
+defaultContentType: application/json
+
+channels:
+  telemetry:
+    address: 'smartvillage.devices.event'
+    messages:
+      telemetry:
+        $ref: '#/components/messages/telemetry'
+    description: Топик с данными телеметрии.
+operations:
+  receiveTelemetry:
+    action: receive
+    channel:
+      $ref: '#/channels/telemetry'
+    summary: >-
+      Inform about environmental lighting conditions of a particular
+      streetlight.
+    traits:
+      - $ref: '#/components/operationTraits/kafka'
+    messages:
+      - $ref: '#/channels/telemetry/messages/telemetry'
+components:
+  messages:
+    telemetry:
+      name: telemetry
+      title: Телеметрия
+      summary: >-
+        Обмен данными телеметрии с устройств умного дома.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/telemetryPayload'
+  schemas:
+    telemetryPayload:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Light intensity measured in lumens.
+
+
+  operationTraits:
+    kafka:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - my-app-id

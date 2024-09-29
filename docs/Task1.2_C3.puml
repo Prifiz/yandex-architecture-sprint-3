@@ -1,0 +1,38 @@
+@startuml
+
+!include C4_Container.puml
+
+SHOW_PERSON_OUTLINE()
+LAYOUT_TOP_DOWN()
+
+Person(user, "Пользователь")
+
+System_Boundary(deviceMgmtSystem, "Система управления устройствами") {
+    Container(deviceMgr, "Сервис управления устройствами")
+    ContainerDb(deviceMgrDb, $techn="Postgres", "Хранилище состояний устройств")
+}
+
+System_Boundary(telemetryMgmtSystem, "Система управления телеметрией") {
+    Container(telemetryMgr, "Сервис телеметрии")
+    ContainerDb(telemetryDb, $techn="Postgres", "Хранилище данных телеметрии")
+}
+
+System_Ext(device, "Устройство умного дома")
+System_Ext(gateway, "API Gateway")
+
+Rel(user, gateway, "Подключение устройства\nУправление устройством")
+Rel(gateway, deviceMgr, "Управление устройством")
+Rel(gateway, telemetryMgr, "Просмотр данных телеметрии")
+
+Container(broker, "Брокер", "Kafka")
+
+
+Rel_L(deviceMgr, device, "Управление устройством")
+Rel(deviceMgr, broker, "Публикация сообщений телеметрии")
+Rel(deviceMgr, deviceMgrDb, "Хранение состояний устройств")
+
+Rel(telemetryMgr, broker, "Чтение сообщений телеметрии")
+
+Rel(telemetryMgr, telemetryDb, "Хранение телеметрии")
+
+@enduml
