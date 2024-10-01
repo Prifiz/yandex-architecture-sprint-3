@@ -11,7 +11,6 @@ import ru.yandex.practicum.smarthome.dto.DeviceDto;
 import ru.yandex.practicum.smarthome.dto.DeviceResponseDto;
 import ru.yandex.practicum.smarthome.dto.DeviceStatusDto;
 import ru.yandex.practicum.smarthome.entity.Device;
-import ru.yandex.practicum.smarthome.entity.DeviceStatus;
 import ru.yandex.practicum.smarthome.entity.DeviceType;
 import ru.yandex.practicum.smarthome.entity.House;
 import ru.yandex.practicum.smarthome.repository.DeviceRepository;
@@ -65,9 +64,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void sendCommand(Long deviceId, CommandDto commandDto) {
-        // копипаст ужасный
+        // копипаст и хардкод ужасный
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
+        props.put("bootstrap.servers", "broker:9093");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
@@ -84,9 +83,9 @@ public class DeviceServiceImpl implements DeviceService {
     public void updateStatus(Long deviceId, DeviceStatusDto statusToSet) {
         Device deviceToUpdate = deviceRepository.findById(deviceId)
                 .orElseThrow(() -> new RuntimeException("No such device"));
-        // копипаст ужасный
+        // копипаст и хардкод ужасный
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
+        props.put("bootstrap.servers", "broker:9093");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 

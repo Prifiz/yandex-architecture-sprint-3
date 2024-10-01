@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/device_mgr
+#    url: jdbc:postgresql://localhost:5432/device_mgr
+    url: ${SPRING_DATASOURCE_URL}
     username: postgres
     password: postgres
     hikari:

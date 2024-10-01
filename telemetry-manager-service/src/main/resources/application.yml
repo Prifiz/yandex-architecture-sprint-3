@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/telemetry_mgr
+    url: ${SPRING_DATASOURCE_URL}
     username: postgres
     password: postgres
     hikari:
@@ -25,7 +25,7 @@ spring:
       auto-offset-reset: earliest
     # change this property if you are using your own
     # Kafka cluster or your Docker IP is different
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${BOOTSTRAP_SERVERS}
 
 server:
   port: 8082
