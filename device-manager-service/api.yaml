@@ -1,0 +1,265 @@
+openapi: 3.0.0
+info:
+  title: device-manager-service-api
+  description: Сервис управления устройствами
+  version: 0.1.0
+
+tags:
+  - name: user
+    description: Операции над пользователями
+  - name: house
+    description: Операции над домами
+  - name: device
+    description: Операции над устройствами
+  - name: device-type
+    description: Операции над типами устройств
+
+x-kusk:
+  upstream:
+    service:
+      name: device
+      namespace: default
+      port: 8081
+
+paths:
+  /user:
+    post:
+      tags: [ user ]
+      description: Создание пользователя
+      operationId: createUser
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '200':
+          description: Созданный пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+  /device-type:
+    post:
+      tags: [ device-type ]
+      description: Добавление нового типа устройства
+      operationId: createDeviceType
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/DeviceTypeDto'
+      responses:
+        '200':
+          description: Добавленный тип устройства
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeDto'
+  /house:
+    post:
+      tags: [ house ]
+      description: Добавление дома
+      operationId: createHouse
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/HouseDto'
+      responses:
+        '200':
+          description: Добавленный дом
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseDto'
+
+  /device:
+    post:
+      tags: [ device ]
+      description: Добавление устройства
+      operationId: createDevice
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/DeviceDto'
+      responses:
+        '200':
+          description: Добавленное устройство
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponseDto'
+  /device/{device_id}:
+    get:
+      tags: [ device ]
+      description: Получение информации об устройстве
+      operationId: getDevice
+      parameters:
+        - name: device_id
+          required: true
+          in: path
+          description: "Идентификатор устройства"
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Данные устройства
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponseDto'
+  /device/{device_id}/command:
+    post:
+      tags: [ device ]
+      description: Выполнение команды на устройстве
+      operationId: executeCommandOnDevice
+      parameters:
+        - name: device_id
+          required: true
+          in: path
+          description: "Идентификатор устройства"
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandDto'
+      responses:
+  /device/{device_id}/status:
+    put:
+      tags: [ device ]
+      description: Изменение статуса устройства
+      operationId: updateDeviceStatus
+      parameters:
+        - name: device_id
+          required: true
+          in: path
+          description: "Идентификатор устройства"
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceStatusDto'
+      responses:
+components:
+  schemas:
+    UserDto:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        name:
+          type: string
+          example: "Rumpelstilzchen"
+    DeviceTypeDto:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        name:
+          type: string
+          example: "Система отопления"
+    HouseDto:
+      type: object
+      required:
+        - userId
+        - address
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 456
+        userId:
+          type: integer
+          format: int64
+          example: 123
+        address:
+          type: string
+          example: "Поселок Кривые Костыли, д. 4а, умный сарай 1" # dadata всё стерпит...
+    DeviceDto:
+      type: object
+      required:
+        - houseId
+        - deviceTypeId
+        - serial
+        - name
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        houseId:
+          type: integer
+          format: int64
+          example: 456
+        deviceTypeId:
+          type: integer
+          format: int64
+          example: 456
+        serial:
+          type: string
+          example: "dfjhd-fgfj-2ereg-dgff"
+        name:
+          type: string
+          example: "Аццкий умный котёл"
+        status:
+          type: string
+          example: "ON"
+    DeviceResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        locationAddress:
+          type: string
+          example: "Поселок Кривые Костыли, д. 4а, умный сарай 1"
+        serial:
+          type: string
+          example: "dfjhd-fgfj-2ereg-dgff"
+        deviceTypeName:
+          type: string
+          example: "Аццкий китайский умный котёл"
+        name:
+          type: string
+          example: "Вася из котельной"
+        status:
+          type: string
+          example: "ON"
+    CommandDto:
+      type: object
+      required:
+        - commandText
+      properties:
+        commandText:
+          type: string
+          example: "set temp=40C"
+    DeviceStatusDto:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          example: "ON"
+          enum:
+            - ON
+            - OFF

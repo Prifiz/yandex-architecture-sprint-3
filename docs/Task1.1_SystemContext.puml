@@ -1,0 +1,22 @@
+@startuml
+!include C4_Context.puml
+
+SHOW_PERSON_OUTLINE()
+
+Person(user, "Пользователь", "владелец дома")
+
+System(monolith, "Smart Home Monolith")
+
+Rel(user, monolith, "Включить/выключить отопление")
+Rel(user, monolith, "Установить температуру")
+Rel(user, monolith, "Посмотреть текущую температуру")
+
+System_Ext(heatSys, "Модуль управления отоплением", "в рамках монолита видна только абстракция 'модуль управления отоплением', явного взаимодействия с датчиками не наблюдается, TemperatureSensorRepository не используется")
+
+Rel(monolith, heatSys, "Включить/выключить отопление")
+Rel(monolith, heatSys, "Изменение целевой температуры")
+Rel(monolith, heatSys, "Запрос текущей температуры")
+
+SHOW_LEGEND()
+
+@enduml

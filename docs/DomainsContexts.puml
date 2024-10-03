@@ -1,0 +1,18 @@
+@startuml
+!include C4_Container.puml
+
+
+System_Boundary(mainDomain, "Domain:\nУправление умными поселками") {
+
+    System_Boundary(deviceMgmtSubdomain, "Subdomain:\nУправление устройствами") {
+        Container(userMgmtContext, "Context:\nУправление пользователями")
+        Container(houseMgmtContext, "Context:\nУправление домами")
+        Container(deviceMgmtContext, "Context:\nУправление устройствами")
+    }
+
+    System_Boundary(telemetryMgmtSubdomain, "Subdomain:\nУправление телеметрией") {
+            Container(telemetryDataMgmtContext, "Context:\nУправление данными телеметрии")
+    }
+}
+
+@enduml

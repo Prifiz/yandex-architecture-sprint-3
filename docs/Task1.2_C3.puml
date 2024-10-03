@@ -1,0 +1,65 @@
+@startuml
+
+!include C4_Component.puml
+
+SHOW_PERSON_OUTLINE()
+LAYOUT_TOP_DOWN()
+
+Person(user, "Пользователь")
+
+AddRelTag("component", $lineStyle = DashedLine())
+
+ContainerQueue(broker, "Брокер", "Kafka")
+
+Container_Boundary(deviceMgmtSystem, "Сервис управления устройствами") {
+'    Container(deviceMgr, "Сервис управления устройствами")
+
+    Component(deviceController, "DeviceController")
+
+    Component(deviceService, "DeviceService")
+
+    Component(deviceRepository, "DeviceRepository")
+    Rel(deviceController, deviceService, "Uses", $tags="component")
+    Rel(deviceService, deviceRepository, "Uses", $tags="component")
+}
+
+System_Ext(device, "Устройство умного дома")
+Rel_U(device, broker, "Публикация данных телеметрии")
+Rel_U(device, broker, "Чтение команд")
+
+
+ContainerDb(deviceMgrDb, $techn="Postgres", "Хранилище данных умных устройств")
+ContainerDb(telemetryDb, $techn="Postgres", "Хранилище данных телеметрии")
+
+Container_Boundary(telemetryMgmtSystem, "Сервис управления телеметрией") {
+
+    Component(telemetryController, "TelemetryController")
+    Component(telemetryService, "TelemetryService")
+    Component(telemetryRepository, "TelemetryRepository")
+    Component(kafkaConsumer, "KafkaConsumer")
+    Rel(telemetryController, telemetryService, "Uses", $tags="component")
+    Rel(kafkaConsumer, telemetryRepository, "Uses", $tags="component")
+    Rel(telemetryService, telemetryRepository, "Uses", $tags="component")
+    Rel(kafkaConsumer, broker, "Consumes messages", "TCP")
+    Rel(telemetryRepository, telemetryDb, "Reads From / Writes To", "SQL/TCP")
+}
+
+
+
+System_Ext(gateway, "API Gateway")
+
+Rel(user, gateway, "Makes API Calls", "JSON/HTTPS")
+Rel(gateway, deviceController, "Makes API Calls", "JSON/HTTPS")
+Rel(gateway, telemetryController, "Makes API Calls", "JSON/HTTPS")
+
+
+
+
+'Rel_L(deviceCommandService, device, "Управление устройством")
+Rel(deviceService, broker, "Produces messages", "TCP")
+Rel(deviceRepository, deviceMgrDb, "Reads From / Writes To", "SQL/TCP")
+
+
+
+
+@enduml

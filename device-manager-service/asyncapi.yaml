@@ -1,0 +1,73 @@
+asyncapi: 3.0.0
+info:
+  title: Device Async API
+  version: 1.0.0
+  description: "API для асинхронного обмена данными для управления устройствами"
+defaultContentType: application/json
+
+channels:
+  commands:
+    address: 'device_commands'
+    messages:
+      commands:
+        $ref: '#/components/messages/commands'
+    description: Топик с командами для устройств.
+  statuses:
+    address: 'device_statuses'
+    messages:
+      statuses:
+        $ref: '#/components/messages/statuses'
+    description: Топик для включения/выключения устройств.
+operations:
+  sendCommand:
+    action: send
+    channel:
+      $ref: '#/channels/commands'
+    summary: >-
+      Отправка команды на устройства умного дома.
+    messages:
+      - $ref: '#/channels/commands/messages/commands'
+  setStatus:
+    action: send
+    channel:
+      $ref: '#/channels/statuses'
+    summary: >-
+      Включение/выключение устройства умного дома.
+    messages:
+      - $ref: '#/channels/statuses/messages/statuses'
+components:
+  messages:
+    commands:
+      name: commands
+      title: Команды
+      summary: >-
+        Команды для устройств умного дома.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/commandDto'
+    statuses:
+      name: statuses
+      title: Состояния
+      summary: >-
+        Состояния, в которые необходимо перевести устройства умного дома.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/deviceStatusDto'
+  schemas:
+    commandDto:
+      type: object
+      properties:
+        commandText:
+          type: string
+          example: Начать убивать всех кожаных прямоходящих
+          description: Текст команды для устройства
+    deviceStatusDto:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ON
+          description: Целевое состояние устройства
+          enum:
+            - ON
+            - OFF

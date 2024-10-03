@@ -1,0 +1,47 @@
+@startuml
+
+entity House {
+    * id : bigserial <<generated>>
+    --
+    * number : varchar
+    * user_id : number <<FK>>
+}
+
+entity Device {
+    * id : bigserial <<generated>>
+    --
+    * name : varchar
+    * status : varchar
+    * serial : varchar
+    * device_type_id : bigserial <<FK>>
+    * house_id : bigserial <<FK>>
+}
+
+entity DeviceType {
+    * id : bigserial <<generated>>
+    --
+    * name : varchar
+}
+
+entity Users {
+    * id : bigserial <<generated>>
+    --
+    * name : varchar
+}
+
+entity Telemetry {
+    * id : bigserial <<generated>>
+    --
+    * device_id : bigserial <<FK>>
+    * produced_at : timestamp
+    * telemetry_unit : varchar
+    * data : varchar
+}
+
+Users ||--|{ House
+House ||--|{ Device
+Device }|--|| DeviceType
+Device ||--|{ Telemetry
+
+
+@enduml
